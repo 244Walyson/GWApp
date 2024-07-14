@@ -1,10 +1,10 @@
-package com.kanban.chat;
+package com.waly.api_gateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ChatApplicationTests {
+class ApiGatewayApplicationTests {
 
 	@Test
 	void contextLoads() {
