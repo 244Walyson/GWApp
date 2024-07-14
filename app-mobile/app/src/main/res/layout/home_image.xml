@@ -1,0 +1,20 @@
+<LinearLayout android:layout_height="85dp"
+    android:layout_width="85dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/image_main_shape"
+    android:gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="65dp"
+        android:layout_height="65dp">
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/statusImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/unknow_image"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/Circle"/>
+    </LinearLayout>
+</LinearLayout>
