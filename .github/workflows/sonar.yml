@@ -54,6 +54,11 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
+      - name: Build
+        run: |
+          cd ${{ matrix.service.name }}
+          mvn compile
+
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
@@ -64,4 +69,4 @@ jobs:
               -Dsonar.host.url=https://sonarcloud.io \
               -Dsonar.organization=244walyson \
               -Dsonar.projectKey=${{ matrix.service.projectKey }} \
-              -Dsonar.login=${{ env.SONAR_TOKEN }}
+              -Dsonar.token=${{ env.SONAR_TOKEN }}
