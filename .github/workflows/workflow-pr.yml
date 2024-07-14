@@ -38,9 +38,4 @@ jobs:
         run: | 
           
           cd gateway-service
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-          -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=244Walyson \
-          -Dsonar.projectKey=244Walyson_GWApp \
-          -Dsonar.pullrequest.branch=$HEAD_REF \
-          -Dsonar.pullrequest.base=${{ github.base_ref }} \
-          -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=244Walyson_GWApp
