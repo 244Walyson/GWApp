@@ -35,5 +35,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_GATEWAY_SERVICE }}
         run: |
+          echo "sonar.projectKey=244walyson_GWApp_gateway-service" > gateway-service/sonar-project.properties
           cd gateway-service
           mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=244walyson_GWApp_gateway-service
