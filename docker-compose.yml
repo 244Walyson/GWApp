@@ -1,0 +1,146 @@
+version: '3'
+services:
+
+  eureka-server:
+    container_name: eureka-server
+    build: ./service-discovery
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
+
+  api-gateway:
+    container_name: api-gateway
+    build: ./api-gateway
+    depends_on:
+      - eureka-server
+    ports:
+      - "8080:8080"
+    environment:
+      EUREKA_SERVER: http://eureka-server:8761/eureka
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui"
+    depends_on:
+      - api-gateway
+    ports:
+      - "8088:8080"
+    environment:
+      URLS:
+
+  kafka:
+    container_name: kafka
+    image: 'bitnami/kafka:latest'
+    environment:
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    ports:
+      - 9094:9094
+
+  redpanda-console:
+    container_name: redpanda-kanban
+    image: docker.redpanda.com/vectorized/console:latest
+    restart: on-failure
+    entrypoint: /bin/sh
+    command: -c "echo \"$$CONSOLE_CONFIG_FILE\" > /tmp/config.yml; /app/console"
+    ports:
+      - 8084:8080
+    environment:
+      CONFIG_FILEPATH: /tmp/config.yml
+      CONSOLE_CONFIG_FILE: |
+        kafka:
+          brokers: ["kafka:9092"]
+    depends_on:
+      - kafka
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
+
+  chat-db:
+    container_name: chat-db
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: chat-db
+    ports:
+      - "27017:27017"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
+
+  auth-service:
+    container_name: auth-service
+    build: ./auth-service
+    depends_on:
+      - chat-db
+      - kafka
+      - eureka-server
+    ports:
+      - "8081:8081"
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      EUREKA_SERVER: http://eureka-server:8761/eureka
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
+
+  chat-service:
+    container_name: chat-service
+    build: ./chat-service
+    depends_on:
+      - chat-db
+      - kafka
+      - eureka-server
+    ports:
+      - "8082:8082"
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      MONGO_DB_URI: mongodb://chat-db:27017/chat-db
+      JWK_SET_URI: http://api-gateway:8080
+      EUREKA_SERVER: http://eureka-server:8761/eureka
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
+
+  notification-service:
+    container_name: notification-service
+    build: ./notification-service
+    depends_on:
+      - kafka
+    ports:
+      - "8083:8083"
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      DB_HOST: notification-db
+      DB_PORT: 3306
+      DB_Name: notification
+      JWK_SET_URI: http://kanban-app:8080
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"

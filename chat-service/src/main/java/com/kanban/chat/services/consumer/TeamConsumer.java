@@ -15,6 +15,7 @@
 //@Slf4j
 //@RequiredArgsConstructor
 //@Component
+//@ConditionalOnProperty(value = "kafka.enable", havingValue = "true", matchIfMissing = true)
 //public class TeamConsumer {
 //
 //    private final ObjectMapper objectMapper;

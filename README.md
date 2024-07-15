@@ -1,15 +1,5 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-# GWApp
+ GWApp
 =======
-# Kanban Api
-## Consiste em três serviços, kanban, chat e notification 
-
 ![Build](https://img.shields.io/badge/build-passing-brightgreen)
 ![gitlab](https://img.shields.io/badge/logo-gitlab-blue?logo=gitlab)
 

@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.waly</groupId>
-	<artifactId>service-discovery</artifactId>
+	<artifactId>discovery-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>service-discovery</name>
+	<name>discovery-service</name>
 	<description>service discovery for microservices</description>
 	<url/>
 	<licenses>

@@ -22,7 +22,6 @@ public class TestConfig {
   @Autowired
   private MessageRepository messageRepository;
 
-
   @PostConstruct
   public void init() {
     chatRepository.deleteAll();
