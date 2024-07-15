@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @AllArgsConstructor
 @Component
-@ConditionalOnProperty(value = "kafka.enable", havingValue = "true", matchIfMissing = true)
 public class SuccessSaveTeamConsumer {
 
     private final ObjectMapper objectMapper;

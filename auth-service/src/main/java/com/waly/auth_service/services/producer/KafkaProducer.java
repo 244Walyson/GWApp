@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-@ConditionalOnProperty(value = "kafka.enable", havingValue = "true", matchIfMissing = true)
 public class KafkaProducer {
 
   @Value("${spring.kafka.user.notification.topic}")

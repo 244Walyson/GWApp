@@ -21,7 +21,6 @@ import java.util.Map;
 
 @Configuration
 @EnableKafka
-@ConditionalOnProperty(value = "kafka.enable", havingValue = "true", matchIfMissing = true)
 public class KafkaConfig {
 
     private static final int PARTITION_COUNT = 1;

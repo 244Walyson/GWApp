@@ -26,7 +26,6 @@ import java.util.Map;
 @EnableKafka
 @RequiredArgsConstructor
 @Slf4j
-@ConditionalOnProperty(value = "kafka.enable", havingValue = "true", matchIfMissing = true)
 public class KafkaConfig {
 
     private static final int PARTITION_COUNT = 1;

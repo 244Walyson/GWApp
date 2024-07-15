@@ -24,7 +24,6 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "kafka.enable", havingValue = "true", matchIfMissing = true)
 @Slf4j
 public class KafkaConfig {
 

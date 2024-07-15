@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(value = "kafka.enable", havingValue = "true", matchIfMissing = true)
 public class NotificationConsumer {
 
   private final ObjectMapper objectMapper;
