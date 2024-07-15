@@ -10,6 +10,7 @@ import com.waly.notificationservice.entities.UserNotification;
 import com.waly.notificationservice.repositories.FcmTokenRepository;
 import com.waly.notificationservice.repositories.UserNotificationRepository;
 import com.waly.notificationservice.utils.CustomUserUtil;
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +23,11 @@ public class NotificationService {
 
   private final UserNotificationRepository userNotificationRepository;
   private final CustomUserUtil customUserUtil;
-  private final FirebaseMessaging firebaseMessaging;
   private final FcmTokenRepository fcmTokenRepository;
 
-  public NotificationService(UserNotificationRepository userNotificationRepository, CustomUserUtil customUserUtil, FirebaseMessaging firebaseMessaging, FcmTokenRepository fcmTokenRepository) {
+  public NotificationService(UserNotificationRepository userNotificationRepository, CustomUserUtil customUserUtil, FcmTokenRepository fcmTokenRepository) {
     this.userNotificationRepository = userNotificationRepository;
     this.customUserUtil = customUserUtil;
-    this.firebaseMessaging = firebaseMessaging;
     this.fcmTokenRepository = fcmTokenRepository;
   }
 
@@ -52,7 +51,7 @@ public class NotificationService {
                 .setNotification(notificationBody)
                 .setToken(fcmToken.getToken())
                 .build();
-        String response = firebaseMessaging.send(message);
+        String response = FirebaseMessaging.getInstance().send(message);
         log.info("Successfully sent message: {}", response);
       } catch (FirebaseMessagingException e) {
         log.error("Firebase error sending", e);
