@@ -245,33 +245,29 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       build_done: ${{ steps.check_build.outputs.build_done }}
+    needs:
+      - report_gateway_service_status
+      - report_discovery_service_status
+      - report_auth_service_status
+      - report_chat_service_status
+      - report_notification_service_status
     steps:
       - name: Check if any build job succeeded
         id: check_build
         run: |
-          if [[ "${{ github.event_name }}" == 'push' && \
-                ( "${{ github.event.head_commit.added }}" =~ ^gateway-service/.* || \
-                  "${{ github.event.head_commit.modified }}" =~ ^gateway-service/.* || \
-                  "${{ github.event.head_commit.removed }}" =~ ^gateway-service/.* || \
-                  "${{ github.event.head_commit.added }}" =~ ^discovery-service/.* || \
-                  "${{ github.event.head_commit.modified }}" =~ ^discovery-service/.* || \
-                  "${{ github.event.head_commit.removed }}" =~ ^discovery-service/.* || \
-                  "${{ github.event.head_commit.added }}" =~ ^auth-service/.* || \
-                  "${{ github.event.head_commit.modified }}" =~ ^auth-service/.* || \
-                  "${{ github.event.head_commit.removed }}" =~ ^auth-service/.* || \
-                  "${{ github.event.head_commit.added }}" =~ ^chat-service/.* || \
-                  "${{ github.event.head_commit.modified }}" =~ ^chat-service/.* || \
-                  "${{ github.event.head_commit.removed }}" =~ ^chat-service/.* || \
-                  "${{ github.event.head_commit.added }}" =~ ^notification-service/.* || \
-                  "${{ github.event.head_commit.modified }}" =~ ^notification-service/.* || \
-                  "${{ github.event.head_commit.removed }}" =~ ^notification-service/.* ) ]]; then
+          # Verifica se algum dos jobs de relatório indicou sucesso
+          if [[ "${{ needs.report_gateway_service_status.result }}" == 'success' || \
+                "${{ needs.report_discovery_service_status.result }}" == 'success' || \
+                "${{ needs.report_auth_service_status.result }}" == 'success' || \
+                "${{ needs.report_chat_service_status.result }}" == 'success' || \
+                "${{ needs.report_notification_service_status.result }}" == 'success' ]]; then
             echo "Builds were done"
             echo "::set-output name=build_done::true"
           else
             echo "No builds were done"
             echo "::set-output name=build_done::false"
           fi
-  
+
 
   analyze_sonar:
     name: SonarCloud Analysis
