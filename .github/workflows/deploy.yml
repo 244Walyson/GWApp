@@ -25,7 +25,9 @@ jobs:
           distribution: 'zulu'
 
       - name: Build Maven Project
-        run: mvn -B package --file pom.xml
+        run: |
+          cd ${{ matrix.service }}
+          mvn -B package --file pom.xml
 
       - name: Cache Docker layers
         uses: actions/cache@v3
