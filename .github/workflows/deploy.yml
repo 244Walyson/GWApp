@@ -266,7 +266,7 @@ jobs:
       needs.build_gateway_service.result != 'cancelled' &&
       needs.build_gateway_service.result != 'skipped'
     steps:
-      -
+      
       - name: Checkout code
         uses: actions/checkout@v3
 
