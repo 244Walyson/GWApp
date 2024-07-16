@@ -43,7 +43,7 @@ jobs:
       - name: Upload Docker Image Tarball
         uses: actions/upload-artifact@v4
         with:
-          name: gateway-service-image
+          name: gateway-service.tar
           path: gateway-service.tar
           retention-days: 1
 
