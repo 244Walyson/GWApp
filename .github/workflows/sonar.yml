@@ -2,6 +2,14 @@ name: SonarCloud
 
 on:
   workflow_call:
+    secrets:
+        GITHUB_TOKEN:
+            description: 'Token for SonarCloud'
+            required: true
+        SONAR_TOKEN:
+            description: 'Token for SonarCloud'
+            required: true
+
   push:
     branches:
       - main
