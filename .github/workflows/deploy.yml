@@ -269,11 +269,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Display structure of downloaded files
+      - name: Download Docker Image Tarball
         uses: actions/download-artifact@v4
-        run: |
-          ls -R
-          ls -R artifact
+        with:
+          path: artifact/gateway-service.tar
 
 
       - name: Load Docker Image from Tarball
