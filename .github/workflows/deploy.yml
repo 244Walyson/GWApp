@@ -193,51 +193,51 @@ jobs:
           name: notification-service-image
           path: notification-service.tar
 
-  report_gateway_service_status:
-    name: Report Gateway Service Build Status
-    runs-on: ubuntu-latest
-    needs: [build_gateway_service]
-    steps:
-      - name: Report Status
-        run: | 
-          echo "Build Gateway Service status: ${{ needs.build_gateway_service.result }}"
-
-  report_discovery_service_status:
-    name: Report Discovery Service Build Status
-    runs-on: ubuntu-latest
-    needs: [build_discovery_service]
-    steps:
-      - name: Report Status
-        run: |
-          echo "Build Discovery Service status: ${{ needs.build_discovery_service.result }}"
-
-  report_auth_service_status:
-    name: Report Auth Service Build Status
-    runs-on: ubuntu-latest
-    needs: [build_auth_service]
-    steps:
-      - name: Report Status
-        run: |
-          echo "Build Auth Service status: ${{ needs.build_auth_service.result }}"
-
-  report_chat_service_status:
-    name: Report Chat Service Build Status
-    runs-on: ubuntu-latest
-    needs: [build_chat_service]
-    steps:
-      - name: Report Status
-        run: |
-          echo "Build Chat Service status: ${{ needs.build_chat_service.result }}"
-
-
-  report_notification_service_status:
-    name: Report Notification Service Build Status
-    runs-on: ubuntu-latest
-    needs: [build_notification_service]
-    steps:
-      - name: Report Status
-        run: |
-          echo "Build Notification Service status: ${{ needs.build_notification_service.result }}"
+#  report_gateway_service_status:
+#    name: Report Gateway Service Build Status
+#    runs-on: ubuntu-latest
+#    needs: [build_gateway_service]
+#    steps:
+#      - name: Report Status
+#        run: |
+#          echo "Build Gateway Service status: ${{ needs.build_gateway_service.result }}"
+#
+#  report_discovery_service_status:
+#    name: Report Discovery Service Build Status
+#    runs-on: ubuntu-latest
+#    needs: [build_discovery_service]
+#    steps:
+#      - name: Report Status
+#        run: |
+#          echo "Build Discovery Service status: ${{ needs.build_discovery_service.result }}"
+#
+#  report_auth_service_status:
+#    name: Report Auth Service Build Status
+#    runs-on: ubuntu-latest
+#    needs: [build_auth_service]
+#    steps:
+#      - name: Report Status
+#        run: |
+#          echo "Build Auth Service status: ${{ needs.build_auth_service.result }}"
+#
+#  report_chat_service_status:
+#    name: Report Chat Service Build Status
+#    runs-on: ubuntu-latest
+#    needs: [build_chat_service]
+#    steps:
+#      - name: Report Status
+#        run: |
+#          echo "Build Chat Service status: ${{ needs.build_chat_service.result }}"
+#
+#
+#  report_notification_service_status:
+#    name: Report Notification Service Build Status
+#    runs-on: ubuntu-latest
+#    needs: [build_notification_service]
+#    steps:
+#      - name: Report Status
+#        run: |
+#          echo "Build Notification Service status: ${{ needs.build_notification_service.result }}"
 
 
 
@@ -252,6 +252,7 @@ jobs:
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
+
   deploy_gateway_service:
     name: Deploy Gateway Service to Docker Hub
     runs-on: ubuntu-latest
@@ -265,30 +266,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Skip unchanged services
-        if: needs.build_gateway_service.result == 'skipped'
-        run: echo "No changes in gateway-service. Skipping deploy."
-
       - name: Download Docker Image Tarball
-        if: needs.build_gateway_service.result != 'skipped'
         uses: actions/download-artifact@v3
         with:
           name: gateway-service-image
           path: gateway-service.tar
 
       - name: Load Docker Image from Tarball
-        if: needs.build_gateway_service.result != 'skipped'
         run: docker load -i gateway-service.tar
 
       - name: Log in to Docker Hub
-        if: needs.build_gateway_service.result != 'skipped'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Push Docker Image
-        if: needs.build_gateway_service.result != 'skipped'
         run: docker push ${{ secrets.DOCKER_USERNAME }}/gateway-service:${{ github.run_number }}
 
   deploy_discovery_service:
@@ -304,30 +297,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Skip unchanged services
-        if: needs.build_discovery_service.result == 'skipped'
-        run: echo "No changes in discovery-service. Skipping deploy."
-
       - name: Download Docker Image Tarball
-        if: needs.build_discovery_service.result != 'skipped'
         uses: actions/download-artifact@v3
         with:
           name: discovery-service-image
           path: discovery-service.tar
 
       - name: Load Docker Image from Tarball
-        if: needs.build_discovery_service.result != 'skipped'
         run: docker load -i discovery-service.tar
 
       - name: Log in to Docker Hub
-        if: needs.build_discovery_service.result != 'skipped'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Push Docker Image
-        if: needs.build_discovery_service.result != 'skipped'
         run: docker push ${{ secrets.DOCKER_USERNAME }}/discovery-service:${{ github.run_number }}
 
   deploy_auth_service:
@@ -343,30 +328,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Skip unchanged services
-        if: needs.build_auth_service.result == 'skipped'
-        run: echo "No changes in auth-service. Skipping deploy."
-
       - name: Download Docker Image Tarball
-        if: needs.build_auth_service.result != 'skipped'
         uses: actions/download-artifact@v3
         with:
           name: auth-service-image
           path: auth-service.tar
 
       - name: Load Docker Image from Tarball
-        if: needs.build_auth_service.result != 'skipped'
         run: docker load -i auth-service.tar
 
       - name: Log in to Docker Hub
-        if: needs.build_auth_service.result != 'skipped'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Push Docker Image
-        if: needs.build_auth_service.result != 'skipped'
         run: docker push ${{ secrets.DOCKER_USERNAME }}/auth-service:${{ github.run_number }}
 
   deploy_chat_service:
@@ -382,30 +359,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Skip unchanged services
-        if: needs.build_chat_service.result == 'skipped'
-        run: echo "No changes in chat-service. Skipping deploy."
-
       - name: Download Docker Image Tarball
-        if: needs.build_chat_service.result != 'skipped'
         uses: actions/download-artifact@v3
         with:
           name: chat-service-image
           path: chat-service.tar
 
       - name: Load Docker Image from Tarball
-        if: needs.build_chat_service.result != 'skipped'
         run: docker load -i chat-service.tar
 
       - name: Log in to Docker Hub
-        if: needs.build_chat_service.result != 'skipped'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Push Docker Image
-        if: needs.build_chat_service.result != 'skipped'
         run: docker push ${{ secrets.DOCKER_USERNAME }}/chat-service:${{ github.run_number }}
 
   deploy_notification_service:
@@ -421,29 +390,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Skip unchanged services
-        if: needs.build_notification_service.result == 'skipped'
-        run: echo "No changes in notification-service. Skipping deploy."
-
       - name: Download Docker Image Tarball
-        if: needs.build_notification_service.result != 'skipped'
         uses: actions/download-artifact@v3
         with:
           name: notification-service-image
           path: notification-service.tar
 
       - name: Load Docker Image from Tarball
-        if: needs.build_notification_service.result != 'skipped'
         run: docker load -i notification-service.tar
 
       - name: Log in to Docker Hub
-        if: needs.build_notification_service.result != 'skipped'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Push Docker Image
-        if: needs.build_notification_service.result != 'skipped'
         run: docker push ${{ secrets.DOCKER_USERNAME }}/notification-service:${{ github.run_number }}
-  
