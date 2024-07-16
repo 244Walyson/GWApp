@@ -243,6 +243,7 @@ jobs:
   check_builds:
     name: Check if any build was done
     runs-on: ubuntu-latest
+    needs: [build_gateway_service, build_discovery_service, build_auth_service, build_chat_service, build_notification_service]
     steps:
       - name: Check if any build job succeeded
         id: check_build
