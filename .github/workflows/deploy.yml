@@ -255,12 +255,12 @@ jobs:
   deploy_gateway_service:
     name: Deploy Gateway Service to Docker Hub
     runs-on: ubuntu-latest
-    needs: [report_gateway_service_status, analyze_sonar]
-    if: | 
+    needs: [ build_gateway_service, analyze_sonar ]
+    if: |
       always() &&
-        needs.report_gateway_service_status.result != 'failure' &&
-        needs.report_gateway_service_status.result != 'cancelled' &&
-        needs.report_gateway_service_status.result != 'skipped'
+      needs.build_gateway_service.result != 'failure' &&
+      needs.build_gateway_service.result != 'cancelled' &&
+      needs.build_gateway_service.result != 'skipped'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -294,12 +294,12 @@ jobs:
   deploy_discovery_service:
     name: Deploy Discovery Service to Docker Hub
     runs-on: ubuntu-latest
-    needs: [report_discovery_service_status, analyze_sonar]
-    if: | 
+    needs: [ build_discovery_service, analyze_sonar ]
+    if: |
       always() &&
-        needs.report_discovery_service_status.result != 'failure' &&
-        needs.report_discovery_service_status.result != 'cancelled' &&
-        needs.report_discovery_service_status.result != 'skipped'
+      needs.build_discovery_service.result != 'failure' &&
+      needs.build_discovery_service.result != 'cancelled' &&
+      needs.build_discovery_service.result != 'skipped'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -333,12 +333,12 @@ jobs:
   deploy_auth_service:
     name: Deploy Auth Service to Docker Hub
     runs-on: ubuntu-latest
-    needs: [report_auth_service_status, analyze_sonar]
-    if: | 
+    needs: [ build_auth_service, analyze_sonar ]
+    if: |
       always() &&
-        needs.report_auth_service_status.result != 'failure' &&
-        needs.report_auth_service_status.result != 'cancelled' &&
-        needs.report_auth_service_status.result != 'skipped'
+      needs.build_auth_service.result != 'failure' &&
+      needs.build_auth_service.result != 'cancelled' &&
+      needs.build_auth_service.result != 'skipped'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -372,12 +372,12 @@ jobs:
   deploy_chat_service:
     name: Deploy Chat Service to Docker Hub
     runs-on: ubuntu-latest
-    needs: [report_chat_service_status, analyze_sonar]
-    if: | 
+    needs: [ build_chat_service, analyze_sonar ]
+    if: |
       always() &&
-        needs.report_chat_service_status.result != 'failure' &&
-        needs.report_chat_service_status.result != 'cancelled' &&
-        needs.report_chat_service_status.result != 'skipped'
+      needs.build_chat_service.result != 'failure' &&
+      needs.build_chat_service.result != 'cancelled' &&
+      needs.build_chat_service.result != 'skipped'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -411,12 +411,12 @@ jobs:
   deploy_notification_service:
     name: Deploy Notification Service to Docker Hub
     runs-on: ubuntu-latest
-    needs: [report_notification_service_status, analyze_sonar]
-    if: | 
+    needs: [ build_notification_service, analyze_sonar ]
+    if: |
       always() &&
-        needs.report_notification_service_status.result != 'failure' &&
-        needs.report_notification_service_status.result != 'cancelled' &&
-        needs.report_notification_service_status.result != 'skipped'
+      needs.build_notification_service.result != 'failure' &&
+      needs.build_notification_service.result != 'cancelled' &&
+      needs.build_notification_service.result != 'skipped'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -446,3 +446,4 @@ jobs:
       - name: Push Docker Image
         if: needs.build_notification_service.result != 'skipped'
         run: docker push ${{ secrets.DOCKER_USERNAME }}/notification-service:${{ github.run_number }}
+  
