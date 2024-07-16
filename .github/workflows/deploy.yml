@@ -191,7 +191,7 @@ jobs:
   report_services_status:
     name: Report Gateway Service Build Status
     runs-on: ubuntu-latest
-    needs: build_gateway_service
+    needs: [build_gateway_service, build_discovery_service, build_auth_service, build_chat_service, build_notification_service]
     steps:
       - name: Report Status
         run: | 
