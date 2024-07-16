@@ -44,8 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gateway-service-image
-          path: artifact/gateway-service.tar
-          com
+          compress: false
           retention-days: 1
 
   build_discovery_service:
