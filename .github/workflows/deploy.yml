@@ -48,7 +48,7 @@ jobs:
   build_discovery_service:
     name: Build Discovery Service
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && github.event.head_commit.added == 'discovery-service/*' || github.event.head_commit.modified == 'discovery-service/*' || github.event.head_commit.removed == 'discovery-service/*' }}
+    #if: ${{ github.event_name == 'push' && github.event.head_commit.added == 'discovery-service/*' || github.event.head_commit.modified == 'discovery-service/*' || github.event.head_commit.removed == 'discovery-service/*' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
