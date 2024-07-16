@@ -32,6 +32,7 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
+
       - name: Build Docker Image
         run: |
           cd gateway-service
@@ -272,6 +273,11 @@ jobs:
           name: gateway-service-image
           path: gateway-service.tar
 
+      - name: Unzip Docker Image Tarball
+        run: |
+          sudo apt-get install unzip
+          unzip gateway-service.zip
+
       - name: Load Docker Image from Tarball
         run: docker load -i gateway-service.tar
 
@@ -302,6 +308,11 @@ jobs:
         with:
           name: discovery-service-image
           path: discovery-service.tar
+
+      - name: Unzip Docker Image Tarball
+        run: |
+          sudo apt-get install unzip
+          unzip gateway-service.zip
 
       - name: Load Docker Image from Tarball
         run: docker load -i discovery-service.tar
