@@ -272,7 +272,10 @@ jobs:
       - name: Download Docker Image Tarball
         uses: actions/download-artifact@v4
         with:
+          name: gateway-service-image
           path: gateway-service.tar
+        run: |
+          ls -R
 
 
       - name: Load Docker Image from Tarball
