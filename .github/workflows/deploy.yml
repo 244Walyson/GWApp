@@ -48,7 +48,7 @@ jobs:
   build_discovery_service:
     name: Build Discovery Service
     runs-on: ubuntu-latest
-    #if: ${{ github.event_name == 'push' && github.event.head_commit.added == 'discovery-service/*' || github.event.head_commit.modified == 'discovery-service/*' || github.event.head_commit.removed == 'discovery-service/*' }}
+    if: ${{ github.event_name == 'push' && github.event.head_commit.added == 'discovery-service/*' || github.event.head_commit.modified == 'discovery-service/*' || github.event.head_commit.removed == 'discovery-service/*' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -243,22 +243,35 @@ jobs:
   check_builds:
     name: Check if any build was done
     runs-on: ubuntu-latest
-    needs: [build_gateway_service, build_discovery_service, build_auth_service, build_chat_service, build_notification_service]
+    outputs:
+      build_done: ${{ steps.check_build.outputs.build_done }}
     steps:
       - name: Check if any build job succeeded
         id: check_build
         run: |
-          if [ -n "${{ needs.build_gateway_service.result }}" ] || \
-             [ -n "${{ needs.build_discovery_service.result }}" ] || \
-             [ -n "${{ needs.build_auth_service.result }}" ] || \
-             [ -n "${{ needs.build_chat_service.result }}" ] || \
-             [ -n "${{ needs.build_notification_service.result }}" ]; then
-            echo "::build was done"
+          if [[ "${{ github.event_name }}" == 'push' && \
+                ( "${{ github.event.head_commit.added }}" =~ ^gateway-service/.* || \
+                  "${{ github.event.head_commit.modified }}" =~ ^gateway-service/.* || \
+                  "${{ github.event.head_commit.removed }}" =~ ^gateway-service/.* || \
+                  "${{ github.event.head_commit.added }}" =~ ^discovery-service/.* || \
+                  "${{ github.event.head_commit.modified }}" =~ ^discovery-service/.* || \
+                  "${{ github.event.head_commit.removed }}" =~ ^discovery-service/.* || \
+                  "${{ github.event.head_commit.added }}" =~ ^auth-service/.* || \
+                  "${{ github.event.head_commit.modified }}" =~ ^auth-service/.* || \
+                  "${{ github.event.head_commit.removed }}" =~ ^auth-service/.* || \
+                  "${{ github.event.head_commit.added }}" =~ ^chat-service/.* || \
+                  "${{ github.event.head_commit.modified }}" =~ ^chat-service/.* || \
+                  "${{ github.event.head_commit.removed }}" =~ ^chat-service/.* || \
+                  "${{ github.event.head_commit.added }}" =~ ^notification-service/.* || \
+                  "${{ github.event.head_commit.modified }}" =~ ^notification-service/.* || \
+                  "${{ github.event.head_commit.removed }}" =~ ^notification-service/.* ) ]]; then
+            echo "Builds were done"
             echo "::set-output name=build_done::true"
           else
-            echo "::build was not done"
+            echo "No builds were done"
             echo "::set-output name=build_done::false"
-          fi  
+          fi
+  
 
   analyze_sonar:
     name: SonarCloud Analysis
