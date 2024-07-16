@@ -243,11 +243,14 @@ jobs:
 
   analyze_sonar:
     name: SonarCloud Analysis
-    needs: [report_gateway_service_status, report_discovery_service_status, report_auth_service_status, report_chat_service_status, report_notification_service_status]
-    uses: ./.github/workflows/sonar.yml
-    with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    runs-on: ubuntu-latest
+    needs: [ build_gateway_service, build_discovery_service, build_auth_service, build_chat_service, build_notification_service ]
+    steps:
+      - name: Call SonarCloud Workflow
+        uses: ./.github/workflows/sonar.yml
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   deploy:
     name: Deploy to Docker Hub
