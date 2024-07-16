@@ -205,7 +205,7 @@ jobs:
 
   analyze_sonar:
     name: SonarCloud Analysis
-    needs: [report_gateway_service_status, report_discovery_service_status] # Add other service statuses here
+    needs: [report_services_status]
     uses: ./.github/workflows/sonar.yml
 
   deploy:
