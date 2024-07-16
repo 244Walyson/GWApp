@@ -8,12 +8,9 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
-  build:
-    name: Build
+  build_gateway_service:
+    name: Build Gateway Service
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        service: [gateway-service, discovery-service, auth-service, chat-service, notification-service]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,9 +22,7 @@ jobs:
           distribution: 'zulu'
 
       - name: Build Maven Project
-        run: |
-          cd ${{ matrix.service }}
-          mvn -B package --file pom.xml
+        run: mvn -B package --file gateway-service/pom.xml
 
       - name: Cache Docker layers
         uses: actions/cache@v3
@@ -38,24 +33,180 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Build Docker Image
-        id: docker_build
         run: |
-          cd ${{ matrix.service }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:${{ github.run_number }} .
+          cd gateway-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/gateway-service:${{ github.run_number }} .
 
       - name: Save Docker Image to Tarball
-        run: docker save ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:${{ github.run_number }} -o ${{ matrix.service }}.tar
+        run: docker save ${{ secrets.DOCKER_USERNAME }}/gateway-service:${{ github.run_number }} -o gateway-service.tar
 
       - name: Upload Docker Image Tarball
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ matrix.service }}-image
-          path: ${{ matrix.service }}.tar
+          name: gateway-service-image
+          path: gateway-service.tar
 
-  tests:
+  build_discovery_service:
+    name: Build Discovery Service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      - name: Build Maven Project
+        run: mvn -B package --file discovery-service/pom.xml
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build Docker Image
+        run: |
+          cd discovery-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/discovery-service:${{ github.run_number }} .
+
+      - name: Save Docker Image to Tarball
+        run: docker save ${{ secrets.DOCKER_USERNAME }}/discovery-service:${{ github.run_number }} -o discovery-service.tar
+
+      - name: Upload Docker Image Tarball
+        uses: actions/upload-artifact@v3
+        with:
+          name: discovery-service-image
+          path: discovery-service.tar
+
+  build_auth_service:
+    name: Build Auth Service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      - name: Build Maven Project
+        run: mvn -B package --file auth-service/pom.xml
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build Docker Image
+        run: |
+          cd auth-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/auth-service:${{ github.run_number }} .
+
+      - name: Save Docker Image to Tarball
+        run: docker save ${{ secrets.DOCKER_USERNAME }}/auth-service:${{ github.run_number }} -o auth-service.tar
+
+      - name: Upload Docker Image Tarball
+        uses: actions/upload-artifact@v3
+        with:
+          name: auth-service-image
+          path: auth-service.tar
+
+  build_chat_service:
+    name: Build Chat Service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      - name: Build Maven Project
+        run: mvn -B package --file chat-service/pom.xml
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build Docker Image
+        run: |
+          cd chat-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/chat-service:${{ github.run_number }} .
+
+      - name: Save Docker Image to Tarball
+        run: docker save ${{ secrets.DOCKER_USERNAME }}/chat-service:${{ github.run_number }} -o chat-service.tar
+
+      - name: Upload Docker Image Tarball
+        uses: actions/upload-artifact@v3
+        with:
+          name: chat-service-image
+          path: chat-service.tar
+
+  build_notification_service:
+    name: Build Notification Service
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      - name: Build Maven Project
+        run: mvn -B package --file notification-service/pom.xml
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build Docker Image
+        run: |
+          cd notification-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/notification-service:${{ github.run_number }} .
+
+      - name: Save Docker Image to Tarball
+        run: docker save ${{ secrets.DOCKER_USERNAME }}/notification-service:${{ github.run_number }} -o notification-service.tar
+
+      - name: Upload Docker Image Tarball
+        uses: actions/upload-artifact@v3
+        with:
+          name: notification-service-image
+          path: notification-service.tar
+
+  run_tests:
     name: Run Tests
     runs-on: ubuntu-latest
-    needs: build
+    needs:
+      - build_gateway_service
+      - build_discovery_service
+      - build_auth_service
+      - build_chat_service
+      - build_notification_service
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -71,26 +222,23 @@ jobs:
 
   sonar_analyze:
     name: SonarCloud Analysis
-    needs: tests
+    runs-on: ubuntu-latest
+    needs: run_tests
     uses: ./.github/workflows/sonar.yml
 
-
-  deploy:
-    name: Deploy to Docker Hub
+  deploy_gateway_service:
+    name: Deploy Gateway Service
     runs-on: ubuntu-latest
     needs: sonar_analyze
-    strategy:
-      matrix:
-        service: [gateway-service, discovery-service, auth-service, chat-service, notification-service]
     steps:
       - name: Download Docker Image Tarball
         uses: actions/download-artifact@v3
         with:
-          name: ${{ matrix.service }}-image
-          path: ${{ matrix.service }}.tar
+          name: gateway-service-image
+          path: gateway-service.tar
 
       - name: Load Docker Image from Tarball
-        run: docker load -i ${{ matrix.service }}.tar
+        run: docker load -i gateway-service.tar
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -99,4 +247,96 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/${{ matrix.service }}:${{ github.run_number }}
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/gateway-service:${{ github.run_number }}
+
+  deploy_discovery_service:
+    name: Deploy Discovery Service
+    runs-on: ubuntu-latest
+    needs: sonar_analyze
+    steps:
+      - name: Download Docker Image Tarball
+        uses: actions/download-artifact@v3
+        with:
+          name: discovery-service-image
+          path: discovery-service.tar
+
+      - name: Load Docker Image from Tarball
+        run: docker load -i discovery-service.tar
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Push Docker Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/discovery-service:${{ github.run_number }}
+
+  deploy_auth_service:
+    name: Deploy Auth Service
+    runs-on: ubuntu-latest
+    needs: sonar_analyze
+    steps:
+      - name: Download Docker Image Tarball
+        uses: actions/download-artifact@v3
+        with:
+          name: auth-service-image
+          path: auth-service.tar
+
+      - name: Load Docker Image from Tarball
+        run: docker load -i auth-service.tar
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Push Docker Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/auth-service:${{ github.run_number }}
+
+  deploy_chat_service:
+    name: Deploy Chat Service
+    runs-on: ubuntu-latest
+    needs: sonar_analyze
+    steps:
+      - name: Download Docker Image Tarball
+        uses: actions/download-artifact@v3
+        with:
+          name: chat-service-image
+          path: chat-service.tar
+
+      - name: Load Docker Image from Tarball
+        run: docker load -i chat-service.tar
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Push Docker Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/chat-service:${{ github.run_number }}
+
+  deploy_notification_service:
+    name: Deploy Notification Service
+    runs-on: ubuntu-latest
+    needs: sonar_analyze
+    steps:
+      - name: Download Docker Image Tarball
+        uses: actions/download-artifact@v3
+        with:
+          name: notification-service-image
+          path: notification-service.tar
+
+      - name: Load Docker Image from Tarball
+        run: docker load -i notification-service.tar
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Push Docker Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/notification-service:${{ github.run_number }}
