@@ -1,6 +1,7 @@
 name: SonarCloud
 
 on:
+  workflow_call:
   push:
     branches:
       - main
