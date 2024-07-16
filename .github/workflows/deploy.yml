@@ -188,24 +188,57 @@ jobs:
           name: notification-service-image
           path: notification-service.tar
 
-  report_services_status:
+  report_gateway_service_status:
     name: Report Gateway Service Build Status
     runs-on: ubuntu-latest
-    needs: [build_gateway_service, build_discovery_service, build_auth_service, build_chat_service, build_notification_service]
+    needs: [build_gateway_service]
     steps:
       - name: Report Status
         run: | 
           echo "Build Gateway Service status: ${{ needs.build_gateway_service.result }}"
+
+  report_discovery_service_status:
+    name: Report Discovery Service Build Status
+    runs-on: ubuntu-latest
+    needs: [build_discovery_service]
+    steps:
+      - name: Report Status
+        run: |
           echo "Build Discovery Service status: ${{ needs.build_discovery_service.result }}"
+
+  report_auth_service_status:
+    name: Report Auth Service Build Status
+    runs-on: ubuntu-latest
+    needs: [build_auth_service]
+    steps:
+      - name: Report Status
+        run: |
           echo "Build Auth Service status: ${{ needs.build_auth_service.result }}"
-          echo "Build Notification Service status: ${{ needs.build_notification_service.result }}"
+
+  report_chat_service_status:
+    name: Report Chat Service Build Status
+    runs-on: ubuntu-latest
+    needs: [build_chat_service]
+    steps:
+      - name: Report Status
+        run: |
           echo "Build Chat Service status: ${{ needs.build_chat_service.result }}"
 
 
+  report_notification_service_status:
+    name: Report Notification Service Build Status
+    runs-on: ubuntu-latest
+    needs: [build_notification_service]
+    steps:
+      - name: Report Status
+        run: |
+          echo "Build Notification Service status: ${{ needs.build_notification_service.result }}"
+  
+  
 
   analyze_sonar:
     name: SonarCloud Analysis
-    needs: [report_services_status]
+    needs: [report_gateway_service_status, report_discovery_service_status, report_auth_service_status, report_chat_service_status, report_notification_service_status]
     uses: ./.github/workflows/sonar.yml
 
   deploy:
