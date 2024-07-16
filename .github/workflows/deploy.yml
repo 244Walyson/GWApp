@@ -281,17 +281,12 @@ jobs:
         run: |
           ls
           ls -l gateway-service.tar
-
-      - name: Verify file
-        run: |
-            if [ -d ./gateway-service.tar ]; then
-              echo "Error: gateway-service.tar is a directory"
-              exit 1
-            fi
+          cd gateway-service.tar 
+            ls
 
 
       - name: Load Docker Image from Tarball
-        run: docker load -i gateway-service.tar
+        run: docker load -i gateway-service.tar/gateway-service.tar
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
