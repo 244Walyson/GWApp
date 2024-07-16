@@ -240,34 +240,14 @@ jobs:
           echo "Build Notification Service status: ${{ needs.build_notification_service.result }}"
 
 
-  check_builds:
-    name: Check if any build was done
-    runs-on: ubuntu-latest
-    needs: [report_gateway_service_status, report_discovery_service_status, report_auth_service_status, report_chat_service_status, report_notification_service_status]
-    outputs:
-      build_done: ${{ steps.check_build.outputs.build_done }}
-    steps:
-      - name: Check if any build job succeeded
-        id: check_build
-        run: |
-          # Verifica se algum dos jobs de relatório indicou sucesso
-          if [[ "${{ needs.report_gateway_service_status.result }}" == 'success' || \
-                "${{ needs.report_discovery_service_status.result }}" == 'success' || \
-                "${{ needs.report_auth_service_status.result }}" == 'success' || \
-                "${{ needs.report_chat_service_status.result }}" == 'success' || \
-                "${{ needs.report_notification_service_status.result }}" == 'success' ]]; then
-            echo "Builds were done"
-            echo "::set-output name=build_done::true"
-          else
-            echo "No builds were done"
-            echo "::set-output name=build_done::false"
-          fi
-
 
   analyze_sonar:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
-    needs: check_builds
+    if: |
+      always() &&
+      !contains(needs.*.result, 'failure') &&
+      !contains(needs.*.result, 'cancelled')
     steps:
       - name: Call SonarCloud Workflow
         uses: ./.github/workflows/sonar.yml
