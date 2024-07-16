@@ -238,33 +238,30 @@ jobs:
       - name: Report Status
         run: |
           echo "Build Notification Service status: ${{ needs.build_notification_service.result }}"
-  
 
-  report_build_status:
-    name: Report Build Status
+
+  check_builds:
+    name: Check if any build was done
     runs-on: ubuntu-latest
-    needs: [build_gateway_service, build_discovery_service, build_auth_service, build_chat_service, build_notification_service]
     steps:
-      - name: Check if any build succeeded
+      - name: Check if any build job succeeded
+        id: check_build
         run: |
-          echo "build_gateway_service=${{ needs.build_gateway_service.result }}" >> $GITHUB_ENV
-          echo "build_discovery_service=${{ needs.build_discovery_service.result }}" >> $GITHUB_ENV
-          echo "build_auth_service=${{ needs.build_auth_service.result }}" >> $GITHUB_ENV
-          echo "build_chat_service=${{ needs.build_chat_service.result }}" >> $GITHUB_ENV
-          echo "build_notification_service=${{ needs.build_notification_service.result }}" >> $GITHUB_ENV
-          if [[ ${{ needs.build_gateway_service.result }} == 'success' ]] || [[ ${{ needs.build_discovery_service.result }} == 'success' ]] || [[ ${{ needs.build_auth_service.result }} == 'success' ]] || [[ ${{ needs.build_chat_service.result }} == 'success' ]] || [[ ${{ needs.build_notification_service.result }} == 'success' ]]; then
-            echo "BUILD_SUCCEEDED=true" >> $GITHUB_ENV
+          if [ -n "${{ needs.build_gateway_service.result }}" ] || \
+             [ -n "${{ needs.build_discovery_service.result }}" ] || \
+             [ -n "${{ needs.build_auth_service.result }}" ] || \
+             [ -n "${{ needs.build_chat_service.result }}" ] || \
+             [ -n "${{ needs.build_notification_service.result }}" ]; then
+            echo "::set-output name=build_done::true"
           else
-            echo "BUILD_SUCCEEDED=false" >> $GITHUB_ENV
-          fi
-  
-  
+            echo "::set-output name=build_done::false"
+          fi  
 
   analyze_sonar:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
-    needs: report_build_status
-    if: ${{ BUILD_SUCCEEDED == 'true' }}
+    needs: check_builds
+    if: ${{ needs.check_build.outputs.build_done == 'true' }}
     steps:
       - name: Call SonarCloud Workflow
         uses: ./.github/workflows/sonar.yml
