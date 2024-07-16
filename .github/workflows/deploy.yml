@@ -278,7 +278,9 @@ jobs:
 
 
       - name: Display structure of downloaded files
-        run: ls
+        run: |
+          ls
+          ls -l gateway-service.tar
 
       - name: Verify file
         run: |
