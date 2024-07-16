@@ -44,6 +44,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gateway-service-image
+          path: gateway-service.tar
+          retention-days: 1
 
   build_discovery_service:
     name: Build Discovery Service
