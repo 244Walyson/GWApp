@@ -244,10 +244,10 @@ jobs:
   analyze_sonar:
     name: SonarCloud Analysis
     needs: [build_gateway_service, build_discovery_service, build_auth_service, build_chat_service, build_notification_service]
-    if: |
-      always() &&
-      !contains(needs.*.result, 'failure') &&
-      !contains(needs.*.result, 'cancelled')
+    #if: |
+     # always() &&
+      #!contains(needs.*.result, 'failure') &&
+      #!contains(needs.*.result, 'cancelled')
     uses: ./.github/workflows/sonar.yml
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
