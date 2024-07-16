@@ -266,7 +266,7 @@ jobs:
       needs.build_gateway_service.result != 'cancelled' &&
       needs.build_gateway_service.result != 'skipped'
     steps:
-      
+
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -278,8 +278,14 @@ jobs:
 
 
       - name: Display structure of downloaded files
-        run: ls -R
+        run: ls
 
+      - name: Verify file
+        run: |
+            if [ -d ./gateway-service.tar ]; then
+              echo "Error: gateway-service.tar is a directory"
+              exit 1
+            fi
 
 
       - name: Load Docker Image from Tarball
