@@ -264,7 +264,7 @@ jobs:
     name: SonarCloud Analysis
     runs-on: ubuntu-latest
     needs: report_build_status
-    if: ${{ env.BUILD_SUCCEEDED == 'true' }}
+    if: ${{ BUILD_SUCCEEDED == 'true' }}
     steps:
       - name: Call SonarCloud Workflow
         uses: ./.github/workflows/sonar.yml
