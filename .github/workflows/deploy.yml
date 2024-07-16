@@ -80,11 +80,27 @@ jobs:
           name: discovery-service-image
           path: discovery-service.tar
 
-  # Add similar jobs for other services: auth-service, chat-service, notification-service
+  report_gateway_service_status:
+    name: Report Gateway Service Build Status
+    runs-on: ubuntu-latest
+    needs: build_gateway_service
+    steps:
+      - name: Report Status
+        run: | 
+          echo "Build Gateway Service status: ${{ needs.build_gateway_service.result }}"
+
+  report_discovery_service_status:
+    name: Report Discovery Service Build Status
+    runs-on: ubuntu-latest
+    needs: build_discovery_service
+    steps:
+      - name: Report Status
+        run: | 
+          echo "Build Discovery Service status: ${{ needs.build_discovery_service.result }}"
 
   analyze_sonar:
     name: SonarCloud Analysis
-    needs: [build_gateway_service, build_discovery_service] # Add other services here
+    needs: [report_gateway_service_status, report_discovery_service_status] # Add other service statuses here
     uses: ./.github/workflows/sonar.yml
 
   deploy:
