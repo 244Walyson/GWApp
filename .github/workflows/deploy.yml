@@ -11,6 +11,7 @@ jobs:
   build_gateway_service:
     name: Build Gateway Service
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.event.head_commit.added == 'gateway-service/*' || github.event.head_commit.modified == 'gateway-service/*' || github.event.head_commit.removed == 'gateway-service/*' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -47,6 +48,7 @@ jobs:
   build_discovery_service:
     name: Build Discovery Service
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.event.head_commit.added == 'discovery-service/*' || github.event.head_commit.modified == 'discovery-service/*' || github.event.head_commit.removed == 'discovery-service/*' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -83,6 +85,7 @@ jobs:
   build_auth_service:
     name: Build Auth Service
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.event.head_commit.added == 'auth-service/*' || github.event.head_commit.modified == 'auth-service/*' || github.event.head_commit.removed == 'auth-service/*' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -119,6 +122,7 @@ jobs:
   build_chat_service:
     name: Build Chat Service
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.event.head_commit.added == 'chat-service/*' || github.event.head_commit.modified == 'chat-service/*' || github.event.head_commit.removed == 'chat-service/*' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -155,6 +159,7 @@ jobs:
   build_notification_service:
     name: Build Notification Service
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.event.head_commit.added == 'notification-service/*' || github.event.head_commit.modified == 'notification-service/*' || github.event.head_commit.removed == 'notification-service/*' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
