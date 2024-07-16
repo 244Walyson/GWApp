@@ -266,6 +266,11 @@ jobs:
       needs.build_gateway_service.result != 'cancelled' &&
       needs.build_gateway_service.result != 'skipped'
     steps:
+
+      - uses: actions/download-artifact@v4
+      - name: Display structure of downloaded files
+        run: ls -R
+      
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -289,6 +294,8 @@ jobs:
 
       - name: Push Docker Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/gateway-service:${{ github.run_number }}
+
+
 
   deploy_discovery_service:
     name: Deploy Discovery Service to Docker Hub
