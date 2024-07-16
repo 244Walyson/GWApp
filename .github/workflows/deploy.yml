@@ -44,6 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gateway-service-image
+          path: gateway-service.tar
           compress: false
           retention-days: 1
 
@@ -268,8 +269,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Display structure of downloaded files
+        uses: actions/download-artifact@v4
+        run: ls -R
+
       - name: Download Docker Image Tarball
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: gateway-service-image
           path: gateway-service.tar
