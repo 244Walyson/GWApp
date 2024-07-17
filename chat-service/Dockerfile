@@ -5,5 +5,5 @@ RUN mvn clean install -DskipTests
 
 FROM openjdk:18-slim
 WORKDIR /app
-COPY --from=builder /app/target/chat-0.0.1-SNAPSHOT.jar ./
-CMD ["java", "-jar", "chat-0.0.1-SNAPSHOT.jar"]
+COPY --from=builder /app/target/chat-service-0.0.1-SNAPSHOT.jar ./
+CMD ["java", "-jar", "chat-service-0.0.1-SNAPSHOT.jar"]

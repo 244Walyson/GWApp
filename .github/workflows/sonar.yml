@@ -1,15 +1,21 @@
 name: SonarCloud
 
 on:
+  workflow_call:
+    secrets:
+        SONAR_TOKEN:
+            description: 'Token for SonarCloud'
+            required: true
+
   push:
     branches:
       - main
-  pull_request:
-    types: [opened, synchronize, reopened]
+  #pull_request:
+   # types: [opened, synchronize, reopened]
 
 jobs:
   build:
-    name: Build and analyze
+    name: Analyze
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
