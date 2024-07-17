@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: API-GATEWAY
@@ -37,7 +40,7 @@ spring:
         - id: crud-service
           uri: lb://CRUD-SERVICE
           predicates:
-            - Path=/hello-world
+            - Path=/crud
           filters:
             - StripPrefix=1
 
