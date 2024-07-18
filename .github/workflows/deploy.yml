@@ -11,7 +11,7 @@ jobs:
   build_gateway_service:
     name: Build Gateway Service
     runs-on: ubuntu-latest
-    #if: ${{ github.event_name == 'push' && github.event.head_commit.added == 'gateway-service/*' || github.event.head_commit.modified == 'gateway-service/*' || github.event.head_commit.removed == 'gateway-service/*' }}
+    if: ${{ github.event_name == 'push' && github.event.head_commit.added == 'gateway-service/*' || github.event.head_commit.modified == 'gateway-service/*' || github.event.head_commit.removed == 'gateway-service/*' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -521,7 +521,9 @@ jobs:
 
       - name: Set up Kubeconfig
         id: kubeconfig
-        run: echo "${{ secrets.KUBE_CONTEXT }}" > $HOME/.kube/config
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONTEXT }}" > $HOME/.kube/config
 
       - name: Deploy Nginx
         run: |
