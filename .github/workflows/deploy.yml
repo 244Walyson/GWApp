@@ -521,7 +521,7 @@ jobs:
 
       - name: Set up Kubeconfig
         id: kubeconfig
-        run: echo "${{ secrets.KUBECONFIG_CONTENT }}" > $HOME/.kube/config
+        run: echo "${{ secrets.KUBE_CONTEXT }}" > $HOME/.kube/config
 
       - name: Deploy Nginx
         run: |
