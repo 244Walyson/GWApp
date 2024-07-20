@@ -36,6 +36,7 @@ public class UserService implements UserDetailsService {
   private final UserConnectionRepository userConnectionRepository;
   private final PasswordEncoder passwordEncoder;
   private final KafkaProducer kafkaProducer;
+  private static final String USER_NOT_FOUND = "User not found";
 
   public UserService(UserRepository repository, CustomUserUtil customUserUtil, UserConnectionRepository userConnectionRepository, PasswordEncoder passwordEncoder, KafkaProducer kafkaProducer) {
     this.repository = repository;
@@ -51,7 +52,7 @@ public class UserService implements UserDetailsService {
     List<UserDetailsProjection> result = repository.searchUserAndRolesByEmail(username);
 
     if (result.isEmpty()) result = repository.searchUserAndRolesByNickname(username);
-    if (result.isEmpty()) throw new ResourceNotFoundException("User not found");
+    if (result.isEmpty()) throw new ResourceNotFoundException(USER_NOT_FOUND);
 
 
     User user = new User();
@@ -65,20 +66,20 @@ public class UserService implements UserDetailsService {
 
   protected User authenticated() {
     String username = customUserUtil.getLoggedUsername();
-    return repository.findByEmail(username).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    return repository.findByEmail(username).orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
   }
 
   public User findByEmail(String email) {
-    return repository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    return repository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
   }
 
   public User findByNickname(String nickname) {
-    return repository.findByNickname(nickname).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+    return repository.findByNickname(nickname).orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND));
   }
 
   @Transactional
   public void saveOauthUser(OidcUser oidcUser) {
-    if (!repository.existsByEmail(oidcUser.getEmail())) {
+    if (Boolean.FALSE.equals(repository.existsByEmail(oidcUser.getEmail()))) {
       User user = new User();
       user.setName(oidcUser.getFullName());
       user.setImgUrl(oidcUser.getPicture());
@@ -121,7 +122,7 @@ public class UserService implements UserDetailsService {
       user = repository.save(user);
       return new UserDTO(user);
     }
-    throw new ResourceNotFoundException("User not found");
+    throw new ResourceNotFoundException(USER_NOT_FOUND);
   }
 
   @Transactional(readOnly = true)

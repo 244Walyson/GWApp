@@ -2,7 +2,7 @@ package com.waly.auth_service.services;
 
 
 import com.waly.auth_service.configs.AuthorizationServerConfig;
-import com.waly.auth_service.dtos.AccessToken;
+import com.waly.auth_service.dtos.AccessTokenDTO;
 import com.waly.auth_service.entities.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -24,7 +24,7 @@ public class TokenService {
         this.authorizationServerConfig = authorizationServerConfig;
     }
 
-    public AccessToken getToken(Authentication authentication) {
+    public AccessTokenDTO getToken(Authentication authentication) {
         User user;
         try {
             OidcUser oidcUser = (OidcUser) authentication.getPrincipal();

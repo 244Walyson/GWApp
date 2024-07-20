@@ -3,7 +3,7 @@ services:
 
   eureka-server:
     container_name: eureka-server
-    build: ./service-discovery
+    build: ./discovery-service
     ports:
       - "8761:8761"
     environment:
@@ -14,9 +14,9 @@ services:
           cpus: "0.50"
           memory: "512M"
 
-  api-gateway:
-    container_name: api-gateway
-    build: ./api-gateway
+  gateway-service:
+    container_name: gateway-service
+    build: ./gateway-service
     depends_on:
       - eureka-server
     ports:
@@ -29,15 +29,6 @@ services:
           cpus: "0.50"
           memory: "512M"
 
-  swagger-ui:
-    image: swaggerapi/swagger-ui
-    container_name: "swagger-ui"
-    depends_on:
-      - api-gateway
-    ports:
-      - "8088:8080"
-    environment:
-      URLS:
 
   kafka:
     container_name: kafka
@@ -92,14 +83,34 @@ services:
     container_name: auth-service
     build: ./auth-service
     depends_on:
-      - chat-db
+      - auth-db
       - kafka
       - eureka-server
     ports:
-      - "8081:8081"
+      - "8081:8080"
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       EUREKA_SERVER: http://eureka-server:8761/eureka
+      DB_HOST: auth-db
+      DB_PORT: 3306
+      DB_NAME: auth
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
+
+  auth-db:
+    container_name: auth-db
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: auth
+    ports:
+      - "3307:3306"
     deploy:
       resources:
         limits:
@@ -114,11 +125,11 @@ services:
       - kafka
       - eureka-server
     ports:
-      - "8082:8082"
+      - "8082:8080"
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
       MONGO_DB_URI: mongodb://chat-db:27017/chat-db
-      JWK_SET_URI: http://api-gateway:8080
+      JWK_SET_URI: http://gateway-service:8080/users
       EUREKA_SERVER: http://eureka-server:8761/eureka
     deploy:
       resources:
@@ -131,14 +142,34 @@ services:
     build: ./notification-service
     depends_on:
       - kafka
+      - eureka-server
+      - notification-db
     ports:
-      - "8083:8083"
+      - "8083:8080"
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      EUREKA_SERVER: http://eureka-server:8761/eureka
       DB_HOST: notification-db
       DB_PORT: 3306
-      DB_Name: notification
+      DB_NAME: notification
+      DB_USERNAME: root
+      DB_PASSWORD: root
       JWK_SET_URI: http://kanban-app:8080
+    deploy:
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "512M"
+
+  notification-db:
+    container_name: notification-db
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: notification
+    ports:
+      - "3306:3306"
     deploy:
       resources:
         limits:
