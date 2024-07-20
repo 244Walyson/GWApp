@@ -512,33 +512,33 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USERNAME }}/notification-service:${{ github.run_number }}
 
 
-  deploy_gateway_service_k8s:
-    name: Deploy Gateway Service to Kubernetes
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up Kubeconfig
-        id: kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONTEXT }}" > $HOME/.kube/config
-
-      - name: Deploy Nginx
-        run: |
-          cat <<EOF | kubectl apply -f -
-          apiVersion: v1
-          kind: Pod
-          metadata:
-            name: nginx
-          spec:
-            containers:
-            - name: nginx
-              image: nginx:latest
-              ports:
-              - containerPort: 80
-          EOF
-
-      - name: Verify Deployment
-        run: kubectl get pods
+#  deploy_gateway_service_k8s:
+#    name: Deploy Gateway Service to Kubernetes
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v2
+#
+#      - name: Set up Kubeconfig
+#        id: kubeconfig
+#        run: |
+#          mkdir -p $HOME/.kube
+#          echo "${{ secrets.KUBE_CONTEXT }}" > $HOME/.kube/config
+#
+#      - name: Deploy Nginx
+#        run: |
+#          cat <<EOF | kubectl apply -f -
+#          apiVersion: v1
+#          kind: Pod
+#          metadata:
+#            name: nginx
+#          spec:
+#            containers:
+#            - name: nginx
+#              image: nginx:latest
+#              ports:
+#              - containerPort: 80
+#          EOF
+#
+#      - name: Verify Deployment
+#        run: kubectl get pods
