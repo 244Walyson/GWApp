@@ -1,6 +1,6 @@
 spring:
   application:
-    name: API-GATEWAY
+    name: GATEWAY-SERVICE
 
   main:
     web-application-type: reactive
@@ -37,7 +37,7 @@ spring:
         - id: crud-service
           uri: lb://CRUD-SERVICE
           predicates:
-            - Path=/hello-world
+            - Path=/crud
           filters:
             - StripPrefix=1
 

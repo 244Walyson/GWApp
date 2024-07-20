@@ -11,7 +11,7 @@ import com.nimbusds.jwt.SignedJWT;
 import com.waly.auth_service.configs.customgrant.CustomPasswordAuthenticationConverter;
 import com.waly.auth_service.configs.customgrant.CustomPasswordAuthenticationProvider;
 import com.waly.auth_service.configs.customgrant.CustomUserAuthorities;
-import com.waly.auth_service.dtos.AccessToken;
+import com.waly.auth_service.dtos.AccessTokenDTO;
 import com.waly.auth_service.entities.User;
 import com.waly.auth_service.services.UserService;
 import lombok.Getter;
@@ -168,15 +168,15 @@ public class AuthorizationServerConfig {
     return context -> {
       OAuth2ClientAuthenticationToken principal = context.getPrincipal();
       CustomUserAuthorities user = (CustomUserAuthorities) principal.getDetails();
-      User newUser = userService.findByEmail(user.getUsername());
-      List<String> authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+      User newUser = userService.findByEmail(user.username());
+      List<String> authorities = user.authorities().stream().map(GrantedAuthority::getAuthority).toList();
       if (context.getTokenType().getValue().equals("access_token")) {
         // @formatter:off
 				context.getClaims()
 					.claim("authorities", authorities)
 					.claim("nick", newUser.getNickname())
           .claim("userId", newUser.getId())
-					.claim("username", user.getUsername());
+					.claim("username", user.username());
 				// @formatter:on
       }
     };
@@ -194,7 +194,7 @@ public class AuthorizationServerConfig {
     return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
   }
 
-  public AccessToken generateToken(String username, String nickname, List<String> authorities) {
+  public AccessTokenDTO generateToken(String username, String nickname, List<String> authorities) {
     try {
       var issTime = Date.from(Instant.now());
       var expiration = Date.from(Instant.now().plusSeconds(jwtDurationSeconds));
@@ -216,7 +216,7 @@ public class AuthorizationServerConfig {
       JWSSigner signer = new RSASSASigner(rsaKey.toRSAPrivateKey());
       signedJWT.sign(signer);
       String token = signedJWT.serialize();
-      return new AccessToken(token, "Bearer", jwtDurationSeconds);
+      return new AccessTokenDTO(token, "Bearer", jwtDurationSeconds);
     } catch (JOSEException e) {
       log.error("Error generating token", e);
       return null;

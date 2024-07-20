@@ -31,7 +31,7 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(Long id, String name, String nickname, String email, String imgUrl, String bio, String password, String fcmToken) {
+    public User(Long id, String name, String nickname, String email, String imgUrl, String bio, String password, Set<Role> authorities ,String fcmToken) {
         this.id = id;
         this.name = name;
         this.nickname = nickname;
@@ -39,6 +39,7 @@ public class User implements UserDetails {
         this.imgUrl = imgUrl;
         this.bio = bio;
         this.password = password;
+        this.authorities = authorities;
         this.fcmToken = fcmToken;
     }
 

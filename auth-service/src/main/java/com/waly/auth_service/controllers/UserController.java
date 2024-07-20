@@ -50,7 +50,7 @@ public class UserController {
     }
 
     @GetMapping("/token")
-    public ResponseEntity<AccessToken> getToken(Authentication authentication){
+    public ResponseEntity<AccessTokenDTO> getToken(Authentication authentication){
         return ResponseEntity.ok(tokenGenerator.getToken(authentication));
     }
 

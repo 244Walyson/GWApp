@@ -7,11 +7,11 @@ on:
             description: 'Token for SonarCloud'
             required: true
 
-  push:
-    branches:
-      - main
-  #pull_request:
-   # types: [opened, synchronize, reopened]
+  #push:
+    #branches:
+     # - main
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   build:

@@ -3,6 +3,7 @@ package com.waly.auth_service.configs.customgrant;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,7 +23,6 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 import org.springframework.util.Assert;
 
 import java.security.Principal;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,11 +33,8 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 	private final UserDetailsService userDetailsService;
 	private final OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator;
 	private final PasswordEncoder passwordEncoder;
-	private String username = "";
-	private String password = "";
-	private Set<String> authorizedScopes = new HashSet<>();
 
-	public CustomPasswordAuthenticationProvider(OAuth2AuthorizationService authorizationService,
+  public CustomPasswordAuthenticationProvider(OAuth2AuthorizationService authorizationService,
 			OAuth2TokenGenerator<? extends OAuth2Token> tokenGenerator, 
 			UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
 		
@@ -57,8 +54,8 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 		CustomPasswordAuthenticationToken customPasswordAuthenticationToken = (CustomPasswordAuthenticationToken) authentication;
 		OAuth2ClientAuthenticationToken clientPrincipal = getAuthenticatedClientElseThrowInvalidClient(customPasswordAuthenticationToken);
 		RegisteredClient registeredClient = clientPrincipal.getRegisteredClient();
-		username = customPasswordAuthenticationToken.getUsername();
-		password = customPasswordAuthenticationToken.getPassword();	
+    String username = customPasswordAuthenticationToken.getUsername();
+    String password = customPasswordAuthenticationToken.getPassword();
 		
 		UserDetails user = null;
 		try {
@@ -70,20 +67,23 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 		if (!passwordEncoder.matches(password, user.getPassword()) || !user.getUsername().equals(username)) {
 			throw new OAuth2AuthenticationException("Invalid credentials");
 		}
-		
-		authorizedScopes = user.getAuthorities().stream()
-				.map(scope -> scope.getAuthority())
-				.filter(scope -> registeredClient.getScopes().contains(scope))
-				.collect(Collectors.toSet());
+
+    Set<String> authorizedScopes = user.getAuthorities().stream()
+            .map(GrantedAuthority::getAuthority)
+            .filter(scope -> {
+              assert registeredClient != null;
+              return registeredClient.getScopes().contains(scope);
+            })
+            .collect(Collectors.toSet());
 		
 		//-----------Create a new Security Context Holder Context----------
 		OAuth2ClientAuthenticationToken oAuth2ClientAuthenticationToken = (OAuth2ClientAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
 		CustomUserAuthorities customPasswordUser = new CustomUserAuthorities(username, user.getAuthorities());
 		oAuth2ClientAuthenticationToken.setDetails(customPasswordUser);
 		
-		var newcontext = SecurityContextHolder.createEmptyContext();
-		newcontext.setAuthentication(oAuth2ClientAuthenticationToken);
-		SecurityContextHolder.setContext(newcontext);		
+		var newContext = SecurityContextHolder.createEmptyContext();
+		newContext.setAuthentication(oAuth2ClientAuthenticationToken);
+		SecurityContextHolder.setContext(newContext);
 		
 		//-----------TOKEN BUILDERS----------
 		DefaultOAuth2TokenContext.Builder tokenContextBuilder = DefaultOAuth2TokenContext.builder()
@@ -93,8 +93,9 @@ public class CustomPasswordAuthenticationProvider implements AuthenticationProvi
 				.authorizedScopes(authorizedScopes)
 				.authorizationGrantType(new AuthorizationGrantType("password"))
 				.authorizationGrant(customPasswordAuthenticationToken);
-		
-		OAuth2Authorization.Builder authorizationBuilder = OAuth2Authorization.withRegisteredClient(registeredClient)
+
+    assert registeredClient != null;
+    OAuth2Authorization.Builder authorizationBuilder = OAuth2Authorization.withRegisteredClient(registeredClient)
 				.attribute(Principal.class.getName(), clientPrincipal)
 				.principalName(clientPrincipal.getName())
 				.authorizationGrantType(new AuthorizationGrantType("password"))
