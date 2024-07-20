@@ -1,0 +1,189 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "auth-service.fullname" . }}
+  labels:
+    {{- include "auth-service.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "auth-service.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "auth-service.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "auth-service.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          env:
+            - name: "DB_HOST"
+              valueFrom:
+                secretKeyRef:
+                  key: DB_HOST
+                  name: {{ .Release.Namespace }}
+            - name: "DB_PORT"
+              valueFrom:
+                secretKeyRef:
+                  key: DB_PORT
+                  name: {{ .Release.Namespace }}
+            - name: "DB_NAME"
+              valueFrom:
+                secretKeyRef:
+                  key: DB_NAME
+                  name: {{ .Release.Namespace }}
+            - name: "DB_USERNAME"
+              valueFrom:
+                secretKeyRef:
+                  key: DB_USERNAME
+                  name: {{ .Release.Namespace }}
+            - name: "DB_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  key: DB_PASSWORD
+                  name: {{ .Release.Namespace }}
+            - name: "EUREKA_SERVER"
+              valueFrom:
+                secretKeyRef:
+                  key: EUREKA_SERVER
+                  name: {{ .Release.Namespace }}
+            - name: "CLIENT_ID"
+              valueFrom:
+                secretKeyRef:
+                  key: CLIENT_ID
+                  name: {{ .Release.Namespace }}
+            - name: "CLIENT_SECRET"
+              valueFrom:
+                secretKeyRef:
+                  key: CLIENT_SECRET
+                  name: {{ .Release.Namespace }}
+            - name: "JWT_DURATION"
+              valueFrom:
+                secretKeyRef:
+                  key: JWT_DURATION
+                  name: {{ .Release.Namespace }}
+            - name: "PRIVATE_KEY_KID"
+              valueFrom:
+                secretKeyRef:
+                  key: PRIVATE_KEY_KID
+                  name: {{ .Release.Namespace }}
+            - name: "PUBLIC_KEY"
+              valueFrom:
+                secretKeyRef:
+                  key: PUBLIC_KEY
+                  name: {{ .Release.Namespace }}
+            - name: "PRIVATE_KEY"
+              valueFrom:
+                secretKeyRef:
+                  key: PRIVATE_KEY
+                  name: {{ .Release.Namespace }}
+            - name: "CORS_ORIGINS"
+              valueFrom:
+                secretKeyRef:
+                  key: CORS_ORIGINS
+                  name: {{ .Release.Namespace }}
+            - name: "AWS_KEY"
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_KEY
+                  name: {{ .Release.Namespace }}
+            - name: "AWS_SECRET"
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_SECRET
+                  name: {{ .Release.Namespace }}
+            - name: "AWS_BUCKET_NAME"
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_BUCKET_NAME
+                  name: {{ .Release.Namespace }}
+            - name: "AWS_BUCKET_REGION"
+              valueFrom:
+                secretKeyRef:
+                  key: AWS_BUCKET_REGION
+                  name: {{ .Release.Namespace }}
+            - name: "KAFKA_SASL_USERNAME"
+              valueFrom:
+                secretKeyRef:
+                  key: KAFKA_SASL_USERNAME
+                  name: {{ .Release.Namespace }}
+            - name: "KAFKA_SASL_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  key: KAFKA_SASL_PASSWORD
+                  name: {{ .Release.Namespace }}
+            - name: "KAFKA_BOOTSTRAP_SERVERS"
+              valueFrom:
+                secretKeyRef:
+                  key: KAFKA_BOOTSTRAP_SERVERS
+                  name: {{ .Release.Namespace }}
+            - name: "GITHUB_CLIENT_ID"
+              valueFrom:
+                secretKeyRef:
+                  key: GITHUB_CLIENT_ID
+                  name: {{ .Release.Namespace }}
+            - name: "GITHUB_CLIENT_SECRET"
+              valueFrom:
+                secretKeyRef:
+                  key: GITHUB_CLIENT_SECRET
+                  name: {{ .Release.Namespace }}
+            - name: "GOOGLE_CLIENT_ID"
+              valueFrom:
+                secretKeyRef:
+                  key: GOOGLE_CLIENT_ID
+                  name: {{ .Release.Namespace }}
+            - name: "GOOGLE_CLIENT_SECRET"
+              valueFrom:
+                secretKeyRef:
+                  key: GOOGLE_CLIENT_SECRET
+                  name: {{ .Release.Namespace }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
