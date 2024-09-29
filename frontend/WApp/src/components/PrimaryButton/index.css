@@ -1,0 +1,21 @@
+#btn-primary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2F80ED;
+  font-size: 18px;
+  text-transform: capitalize;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  height: 40px;
+  width: 300px;
+  margin: 10px;
+}
+
+#btn-primary:hover {
+  background-color: #0fa6e1;
+  transition: all 0.3s ease;
+  color: white;
+  cursor: pointer;
+}

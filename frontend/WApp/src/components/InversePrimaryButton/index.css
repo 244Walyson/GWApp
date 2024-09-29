@@ -1,0 +1,20 @@
+#btn-inverse-primary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  font-size: 18px;
+  text-transform: capitalize;
+  color: #2F80ED;
+  border: 1px, solid, #2F80ED;
+  border-radius: 10px;
+  height: 40px;
+  width: 300px;
+}
+
+#btn-inverse-primary:hover {
+  background-color: #0fa6e1;
+  transition: all 0.5s ease;
+  color: white;
+  cursor: pointer;
+}

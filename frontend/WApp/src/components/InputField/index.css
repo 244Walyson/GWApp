@@ -1,0 +1,14 @@
+#input-field {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  color: #A259FF;
+  outline: none;
+  border: #A259FF;
+  border-radius: 10px;
+  height: 40px;
+  width: 300px;
+  padding: 10px;
+  font-size: 16px;
+}

@@ -1,0 +1,10 @@
+.fotter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 25px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  color: white;
+}
