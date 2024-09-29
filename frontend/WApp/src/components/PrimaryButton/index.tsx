@@ -1,5 +1,3 @@
-import "./index.css"
-
 type props = {
   text: string
   onClick: () => void
@@ -7,7 +5,7 @@ type props = {
 
 const PrimaryButton = ({ text }: props) => {
   return (
-    <button id='btn-primary'>{text}</button>
+    <button id='btn-primary' className="dark rounded-lg bg-btn w-full h-10 text-lg border hover:bg-btn-foreground transition-colors duration-300 ease-in-out">{text}</button>
   )
 }
 
