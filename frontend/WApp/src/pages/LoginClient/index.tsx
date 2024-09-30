@@ -1,10 +1,10 @@
-import svgLogo from '../../assets/logo.svg'
-import githubLogo from '../../assets/github_logo.svg'
-import googleLogo from '../../assets/google_logo.svg'
-import loginDetails from '../../assets/login_detail.svg'
-import InversePrimaryButton from '../../components/InversePrimaryButton'
-import PrimaryButton from '../../components/PrimaryButton'
-import InputField from '../../components/InputField'
+import svgLogo from '@/assets/logo.svg'
+import githubLogo from '@/assets/github_logo.svg'
+import googleLogo from '@/assets/google_logo.svg'
+import loginDetails from '@/assets/login_detail.svg'
+import InversePrimaryButton from '@/components/InversePrimaryButton'
+import PrimaryButton from '@/components/PrimaryButton'
+import InputField from '@/components/InputField'
 
 const LoginClient = () => {
   return (

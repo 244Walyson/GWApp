@@ -1,17 +1,31 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { ThemeProvider } from "next-themes"
+
 import "./App.css"
-import Fotter from "./components/Fotter"
+import Navbar from "./components/navbar"
+import Kanban from "./pages/kanban/page"
 import LoginClient from "./pages/LoginClient"
+import Employees from "./pages/employees/page"
+import Dashboard from "./pages/dashboard/page"
 
 
 function App() {
-
   return (
-    <>
-     <div className="app-center bg-background dark">
-     <LoginClient></LoginClient>
-     </div>
-     <Fotter></Fotter>
-    </>
+    <ThemeProvider attribute="class">
+    <BrowserRouter>
+      <div className="bg-gray-200 text-gray-900 dark:bg-gray-950 dark:text-gray-50 w-screen h-screen">
+        <Navbar />
+        <main className="pl-24 pr-10 py-10 h-full max-w-full overflow-x-hidden">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/employees" element={<Employees />} />
+            <Route path="/kanban" element={<Kanban />} />
+            <Route path="/login" element={<LoginClient />} />
+          </Routes>
+        </main>
+      </div>
+    </BrowserRouter>
+    </ThemeProvider>
   )
 }
 

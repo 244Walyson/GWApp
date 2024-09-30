@@ -23,7 +23,7 @@ import { ICard } from "@/interface/card";
 import { ItemCard } from "./card/itemCard";
 
 export const KanbanBoards = () => {
-  const { boards: user_boards, setBoards, updateCards } = useBoards();
+  const { boards: user_boards = [], setBoards, updateCards } = useBoards();
   const [activeBoard, setActiveBoard] = useState<IBoard | null>(null);
   const [activeCard, setActiveCard] = useState<ICard | null>(null);
 
