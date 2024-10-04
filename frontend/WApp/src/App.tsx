@@ -7,11 +7,13 @@ import Kanban from "./pages/kanban/page"
 import LoginClient from "./pages/LoginClient"
 import Employees from "./pages/employees/page"
 import Dashboard from "./pages/dashboard/page"
+import { GlobalProvider } from "./context/globalContext"
 
 
 function App() {
   return (
     <ThemeProvider attribute="class">
+      <GlobalProvider>
     <BrowserRouter>
       <div className="bg-gray-200 text-gray-900 dark:bg-gray-950 dark:text-gray-50 w-screen h-screen">
         <Navbar />
@@ -25,6 +27,7 @@ function App() {
         </main>
       </div>
     </BrowserRouter>
+    </GlobalProvider>
     </ThemeProvider>
   )
 }

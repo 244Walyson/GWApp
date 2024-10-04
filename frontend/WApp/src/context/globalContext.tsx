@@ -1,5 +1,3 @@
-"use client";
-
 import { createContext } from "use-context-selector";
 
 import { BoardsSlice } from "@/slices/boardsSlice";
