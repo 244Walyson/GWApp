@@ -22,7 +22,7 @@ const LoginClient = () => {
           <p>Login into your account</p>
         </div>
 
-          <div className='mt-5'>Username</div>
+          <div className='mt-5 w-80 '>Username</div>
           <InputField placeholder='example@gmail.com'/>
           <div className='mt-3'>Password</div>
           <InputField type="password" placeholder='Enter your password'/>

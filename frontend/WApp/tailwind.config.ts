@@ -60,6 +60,8 @@ const config = {
           DEFAULT: "hsl(var(--btn))",
           foreground: "hsl(var(--btn-foreground))",
         },
+        "message-snd": "hsl(var(--sent-message))",
+        "message-rcd": "hsl(var(--received-message))",
       },
       borderRadius: {
         lg: "var(--radius)",
