@@ -5,8 +5,51 @@ import loginDetails from '@/assets/login_detail.svg'
 import InversePrimaryButton from '@/components/InversePrimaryButton'
 import PrimaryButton from '@/components/PrimaryButton'
 import InputField from '@/components/InputField'
+import { loginRequest, saveAccessToken } from '../../services/authService'
+import { useState } from 'react'
 
 const LoginClient = () => {
+
+  const [formData, setFormData] = useState<any>({
+    username: {
+      value: "",
+      id: "username",
+      name: "username",
+      type: "text",
+      placeholder: "Email",
+      validation: function (value: string) {
+        return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value.toLowerCase());
+      },
+      message: "Favor informar um email válido",
+    },
+    password: {
+      value: "",
+      id: "password",
+      name: "password",
+      type: "password",
+      placeholder: "Senha",
+      validation: function (value: string) {
+        return value.length > 5
+      },
+      message: "a senha deve conter no minimo 6 caracters"
+    }
+  })
+
+  const login = async () => {
+    const loginData = {
+      username: "maria@gmail.com",
+      password: "123456"
+    }
+    loginRequest(loginData).then((res) => {
+      console.log(res.data)
+      saveAccessToken(res.data.access_token)
+    }).catch((err) => {
+      console.log(err)
+    })
+  }
+
+  login()
+ 
   return (
     <div className="flex items-center justify-center w-full font-quicksand">
       

@@ -1,5 +1,6 @@
 import { CSS } from "@dnd-kit/utilities";
 import { useSortable } from "@dnd-kit/sortable";
+import { Trash } from "lucide-react";
 
 import { ICard } from "@/interface/card";
 
@@ -10,12 +11,15 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { DeleteCard } from "./deleteCard";
+import { EditCard } from "./editCard";
 
 type ItemCardProps = {
   card: ICard;
 };
 
 export const ItemCard = ({ card }: ItemCardProps) => {
+  
   const {
     setNodeRef,
     attributes,
@@ -53,24 +57,20 @@ export const ItemCard = ({ card }: ItemCardProps) => {
       className="list-none"
     >
       <Collapsible>
-        <Card className="py-2 px-1 max-w-full min-h-fit overflow-hidden space-y-1.5">
+        <Card className="py-1 px-1 max-w-full min-h-fit overflow-hidden space-y-1.5">
           <CollapsibleTrigger asChild>
-            <h4 className="font-medium text-sm truncate w-full">
+           <div className="flex items-center">
+           <h4 className="font-medium text-base truncate w-full">
               {card.title}
             </h4>
+            <div>
+            <DeleteCard card={card} />
+            </div>
+           </div>
           </CollapsibleTrigger>
 
-          <CollapsibleContent className="max-w-full">
-            <ScrollArea>
-              <p className="text-sm text-wrap break-words max-h-[160px]">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                Inventore voluptate fuga quos incidunt eveniet aspernatur ullam
-                earum laborum quae totam ducimus, explicabo perspiciatis maxime
-                error cumque vel iste tenetur eaque nobis odio cum adipisci.
-                Deleniti, tempora. Expedita exercitationem ut doloremque
-                temporibus incidunt. Ea recusandae id at in velit quis delectus!
-              </p>
-            </ScrollArea>
+          <CollapsibleContent className="max-w-full">              
+              <EditCard card={card} action_callback={() => {}}/>
           </CollapsibleContent>
         </Card>
       </Collapsible>

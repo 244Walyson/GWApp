@@ -27,6 +27,8 @@ export const KanbanBoards = () => {
   const [activeBoard, setActiveBoard] = useState<IBoard | null>(null);
   const [activeCard, setActiveCard] = useState<ICard | null>(null);
 
+  console.log(user_boards);
+
   const boardsId = useMemo(
     () => user_boards.map((board) => board.id),
     [user_boards]
