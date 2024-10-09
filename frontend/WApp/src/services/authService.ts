@@ -6,7 +6,6 @@ import { save, remove, get } from '../localStorage/accessTokenRepository'
 
 
 export function loginRequest(loginData: Credentials){
-
   const headers = {
       "Content-Type": "application/x-www-form-urlencoded",
       "Authorization": "Basic " + window.btoa(CLIENT_ID + ":" + CLIENT_SECRET)
@@ -16,15 +15,16 @@ export function loginRequest(loginData: Credentials){
   requestBody.append("username", loginData.username)
   requestBody.append("password", loginData.password)
   requestBody.append("grant_type", "password")
-  
+
   const config : AxiosRequestConfig = {
       method: "POST",
       url: "/users/oauth2/token",
       data: requestBody,
       headers: headers
   }
-
-  return requestApi(config)
+  
+  const response = requestApi(config)
+  return response
 }
 
 export const logout = () => {

@@ -1,12 +1,23 @@
-type props = { 
-  placeholder: string,
-  type?: string
-}
+import { forwardRef } from "react";
 
-const InputField = ({ placeholder, type }: props ) => {
-  return (
-    <input className="bg-card border rounded-lg p-2 w-full" type={type} placeholder={placeholder}/>
-  )
-}
+type Props = {
+  placeholder: string;
+  type?: string;
+  className?: string;
+};
 
-export default InputField
+const InputField = forwardRef<HTMLInputElement, Props>(
+  ({ placeholder, type = "text", className, ...props }, ref) => {
+    return (
+      <input
+        className={`bg-card border rounded-lg p-2 w-full focus:outline-none ${className}`}
+        type={type}
+        ref={ref}
+        {...props}
+        placeholder={placeholder}
+      />
+    );
+  }
+);
+
+export default InputField;
