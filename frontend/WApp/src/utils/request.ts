@@ -5,10 +5,12 @@ import { history } from './history'
 
 export const requestApi = (config: AxiosRequestConfig) => {
 
+  const accessToken = getAccessToken()
+
   const headers = config.withCredentials
   ? {
     ...config.headers,
-    "Authorization": `Bearer ${getAccessToken()}`
+    "Authorization": `Bearer ${accessToken}`
   }
   : {
     ...config.headers

@@ -1,6 +1,6 @@
 import { SectionHeader } from "../../components/sectionHeader";
-import TeamContainer from "../../components/chat/teams/teamContainer";
 import ChatContainer from "../../components/chat/chat/chatContainer";
+import TeamContainer from "@/components/chat/chat/teamContainer";
 
 const Chat = () => {
   return (

@@ -36,5 +36,5 @@ export const saveAccessToken = (accessToken: string) => {
 }
 
 export const getAccessToken = () => {
-  get()
+  return get()
 }

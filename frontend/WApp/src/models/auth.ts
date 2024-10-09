@@ -4,7 +4,7 @@ export type LoginResponse = {
   "expires_in": number;
 }
 
-export type LoginRequest = {
+export type Credentials = {
   username: string;
   password: string;
 }
