@@ -1,15 +1,14 @@
-import { Send } from "lucide-react";
-import { SectionHeader } from "../../sectionHeader";
-import { Input } from "@/components/ui/input";
 import React, { useContext, useEffect, useState } from "react";
+import { Send } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Message } from "@/models/chat";
+import { ContextToken } from "@/context/contextToken";
+import { useChat } from "@/context/chatContext";
 
 import WebsocketService from "@/services/wsService";
 import MessageItem from "./messageItem";
 import InverseMessageItem from "./inverseMessageItem";
 import DayItem from "./dayItem";
-import { Message } from "@/models/chat";
-import { ContextToken } from "@/context/contextToken";
-import { useChat } from "@/context/chatContext";
 import ChatHeader from "./chatHeader";
 
 const ChatContainer = () => {
@@ -45,7 +44,7 @@ const ChatContainer = () => {
   const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (newMessage.trim()) {
-      WebsocketService.sendMessage("/app/chat/U12", {
+      WebsocketService.sendMessage(`/app/chat/${chat?.id}`, {
         content: newMessage,
       });
       setNewMessage("");
