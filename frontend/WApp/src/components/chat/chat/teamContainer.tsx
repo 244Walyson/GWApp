@@ -1,18 +1,27 @@
 import { useState, useEffect } from "react";
-import { findAll } from "@/services/userService";
-import { UserChat } from "@/models/user";
 
 import ChatItems from "./chatItems";
 import WebsocketService from "@/services/wsService";
 import { ChatRoomItem } from "@/models/chat";
+import { useChat } from "@/context/chatContext";
 
 const TeamContainer = () => {
-  const [chats, setChats] = useState<ChatRoomItem[]>();
+  const [chats, setChats] = useState<ChatRoomItem[]>([]);
+  const { setChat } = useChat();
 
   useEffect(() => {
-    WebsocketService.subscribe("/user/maria2543/queue/chats", (message) => {
-      setChats(message);
-    });
+    const handleIncomingMessage = (newMessages: ChatRoomItem[]) => {
+      setChats((prevChats) => {
+        const chatIds = new Set(newMessages.map((m) => m.id));
+        const filteredChats = prevChats.filter((c) => !chatIds.has(c.id));
+        return [...newMessages, ...filteredChats];
+      });
+    };
+
+    WebsocketService.subscribe(
+      "/user/maria2543/queue/chats",
+      handleIncomingMessage
+    );
   }, []);
 
   console.log(chats);
@@ -30,6 +39,7 @@ const TeamContainer = () => {
               imgUrl={chat.imgUrl}
               latestMessage={chat.latestMessage}
               latestActivity={chat.latestActivity}
+              onClick={() => setChat(chat)}
             />
           ))}
       </div>

@@ -3,7 +3,8 @@ import { requestApi } from '../utils/request'
 import { AxiosRequestConfig } from 'axios'
 import { Credentials } from '../models/auth'
 import { save, remove, get } from '../localStorage/accessTokenRepository'
-
+import { AccessTokenPayload } from '../models/auth'
+import { jwtDecode } from 'jwt-decode'
 
 export function loginRequest(loginData: Credentials){
   const headers = {
@@ -37,4 +38,19 @@ export const saveAccessToken = (accessToken: string) => {
 
 export const getAccessToken = () => {
   return get()
+}
+
+export const getAccessTokenPayload = () => {
+  try {
+    const accessToken = getAccessToken()
+    return accessToken == null ? undefined : (jwtDecode (accessToken) as AccessTokenPayload)
+  } catch (error) {
+    console.error('Erro ao decodificar o token de acesso:', error)
+    return undefined
+  }
+}
+
+export const isAuthenticated = () => {
+  const accessToken = getAccessToken()
+  return accessToken != null
 }

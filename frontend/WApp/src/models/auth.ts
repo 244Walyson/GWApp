@@ -8,3 +8,10 @@ export type Credentials = {
   username: string;
   password: string;
 }
+
+export type AccessTokenPayload = {
+  nick: string,
+  exp: number,
+  userId: string,
+  username: string,
+}
