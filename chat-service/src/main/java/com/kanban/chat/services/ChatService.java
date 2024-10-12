@@ -89,14 +89,12 @@ public class ChatService {
         if (c.getMembers().get(0).getNickname().equals(nickname)) {
           chatDTO.setRoomName(c.getMembers().get(1).getName());
           chatDTO.setImgUrl(c.getMembers().get(1).getImgUrl());
-          chatDTOs.add(chatDTO);
         } else {
           chatDTO.setRoomName(c.getMembers().get(0).getName());
           chatDTO.setImgUrl(c.getMembers().get(0).getImgUrl());
-          chatDTOs.add(chatDTO);
         }
+        chatDTOs.add(chatDTO);
       }
-      chatDTOs.add(chatDTO);
     });
     return chatDTOs;
   }

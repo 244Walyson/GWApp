@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Profile;
 import jakarta.annotation.PostConstruct;
 
 @Configuration
-@Profile("test")
+@Profile({"test", "dev"})
 public class TestConfig {
 
   @Autowired
