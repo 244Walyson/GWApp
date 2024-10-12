@@ -34,12 +34,43 @@ spring:
           filters:
             - StripPrefix=1
 
-        - id: crud-service
-          uri: lb://CRUD-SERVICE
+        - id: kanban-service
+          uri: lb://KANBAN-SERVICE
           predicates:
-            - Path=/hello-world
+            - Path=/kanban/**
           filters:
             - StripPrefix=1
+
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin, RETAIN_UNIQUE
+        - AddResponseHeader=Access-Control-Allow-Origin, http://localhost:5173
+
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins:
+              - "http://localhost:5173"
+            allowed-methods:
+              - "GET"
+              - "POST"
+              - "PUT"
+              - "DELETE"
+              - "HEAD"
+              - "OPTIONS"
+            allowed-headers:
+              - "Origin"
+              - "Content-Type"
+              - "Accept"
+              - "Authorization"
+              - "User-Key"
+              - "Request-Tracker"
+              - "Session-Tracker"
+              - "X-XSRF-TOKEN"
+              - "X-IBM-CLIENT-ID"
+              - "Message-ID"
+              - "X-IBM-CLIENT-SECRET"
+            allow-credentials: true
+        add-to-simple-url-handler-mapping: true
 
 eureka:
   client:
@@ -62,6 +93,8 @@ springdoc:
         name: Auth Service
       - url: /notifications/v3/api-docs
         name: Notification Service
+      - url: /kanban/v3/api-docs
+        name: Kanban Service
 
 logging:
   level:
