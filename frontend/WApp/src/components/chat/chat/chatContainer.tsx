@@ -33,14 +33,6 @@ const ChatContainer = () => {
     );
   }, [chat]);
 
-  if (chat) {
-    // Use chat properties safely
-    console.log(chat.roomName); // Access properties of chat
-  } else {
-    // Handle the case when chat is not selected
-    console.log("No chat selected");
-  }
-
   const sendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (newMessage.trim()) {
@@ -76,14 +68,14 @@ const ChatContainer = () => {
               <div key={message.id}>
                 {currentDate !== prevDate && <DayItem day={currentDate} />}
                 {message.sender.nickname === contextTokenPayload?.nick ? (
-                  <MessageItem
+                  <InverseMessageItem
                     id={message.id}
                     content={message.content}
                     sendAt={message.sendAt}
                     sender={message.sender}
                   />
                 ) : (
-                  <InverseMessageItem
+                  <MessageItem
                     id={message.id}
                     content={message.content}
                     sendAt={message.sendAt}

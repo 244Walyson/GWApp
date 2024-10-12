@@ -24,9 +24,7 @@ const TeamContainer = () => {
       `/user/${contextTokenPayload?.nick}/queue/chats`,
       handleIncomingMessage
     );
-  }, []);
-
-  console.log(chats);
+  }, [contextTokenPayload]);
 
   return (
     <div className="w-full h-screen  mt-3 pt-3 pb-44">
